@@ -1,0 +1,11 @@
+/*
+Original design: andreas09 (v2.2 - July 07, 2008) - A free xhtml/css website template by Andreas Viklund.
+For more information, see http://andreasviklund.com/templates/andreas09/
+*/
+
+/* Main container */
+#wrapper {background:#f0f0f0 url(img/bodybg-green.jpg) repeat-x}
+
+/* Horizontal menu */
+#nav a:hover {background:#f0f0f0 url(img/menuhover-green.jpg) top left repeat-x}
+#nav a.active {background:#f0f0f0 url(img/menuhover-green.jpg) top left repeat-x}

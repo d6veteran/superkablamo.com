@@ -1,0 +1,9 @@
+FreeBase API Technical Details
+
+1> Module Used -> jquery_freebase.
+2> Plugin Usedfor autoSuggest ->jquery.freebase.suggest.
+3> Freebase API Libraries Used ->api/service/mqlread, 
+			      api/service/search,
+                              api/trans/blurb,
+                              api/trans/image_thumb, and
+                              api/status. 

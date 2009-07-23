@@ -1,0 +1,12 @@
+name = Abessive
+description = Abessive is a lightweight and simple 1/2/3 column, flexible width, CSS, SEO friendly theme.
+core = 6.x
+engine = phptemplate
+
+
+; Information added by drupal.org packaging script on 2009-03-18
+version = "6.x-1.4"
+core = "6.x"
+project = "abessive"
+datestamp = "1237396803"
+

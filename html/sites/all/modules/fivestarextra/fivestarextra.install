@@ -1,0 +1,14 @@
+<?php
+// $Id: fivestarextra.install,v 1.1 2008/10/26 18:53:52 likeless Exp $
+
+/**
+* Implementation of hook_uninstall().
+*/
+function fivestarextraextra_uninstall() {
+  //Get rid of our variables
+  $variables = array('fivestarextra_stars','fivestarextra_labels_enable','fivestarextra_style','fivestarextra_text','fivestarextra_title','fivestarextra_unvote','fivestarextra_feedback','fivestarextra_position','fivestarextra_labels','fivestarextra_enable');
+  foreach ($variables as $variable) {
+    variable_del($variable .'_comment');
+    variable_del($variable .'_user');
+  };
+}

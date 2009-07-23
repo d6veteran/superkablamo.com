@@ -1,0 +1,47 @@
+/**
+ * art4 theme for Drupal 5.x
+ *
+ * Authors: Xactive http://art4linux.org/user/2
+**/
+
+#main-wrapper {
+  float: left;
+  width: 100%;
+}
+
+#main	{
+  margin: 0;
+}
+
+.withleft #main {
+  margin-left: 235px;
+}
+
+.withright #main {
+  margin-right: 235px;
+}
+
+#sidebar-left	{
+  float: left;
+  margin-left: -100%;
+  width: 220px;
+  padding: 5px 8px 20px 8px;
+}
+#sidebar-right	{
+  float: right;
+  margin-left: -100%;
+  width: 220px;
+  padding: 5px 8px 20px 8px;
+}
+
+#sidebar-right {
+  .margin-left: -230px; /* IE7 Fix */
+}
+
+* html #sidebar-right {
+  margin-left: -230px; /* IE6 Fix*/
+}
+
+#footer	{
+  clear: both;
+}

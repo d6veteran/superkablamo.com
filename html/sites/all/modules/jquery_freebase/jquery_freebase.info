@@ -1,0 +1,10 @@
+name = jquery_freebase
+description = Enables the freebase jquery plugin
+dependencies[] = jq
+core = 6.x
+; Information added by drupal.org packaging script on 2008-11-17
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "jquery_freebase"
+datestamp = "1226880487"
+

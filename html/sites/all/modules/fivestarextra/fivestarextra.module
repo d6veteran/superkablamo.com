@@ -1,0 +1,194 @@
+<?php
+// $Id: fivestarextra.module,v 1.3 2008/11/06 18:50:04 likeless Exp $
+
+/**
+ * @file
+ * Enables fivestar voting on comments (ie. voting on whether it is a good or bad comment).
+ *
+ */
+
+
+/**
+ * Implementation of hook_menu.
+ */
+function fivestarextra_menu() {
+  $items = array();
+  
+  $items['admin/settings/fivestarextra_comments'] = array(
+    'title' => 'Fivestar Comments Rating',
+    'page callback'     => 'drupal_get_form',
+    'page arguments'    => array('fivestarextra_comments_admin_form'),
+    'description' => 'Configure Fivestar setting for the rating of comments.',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'fivestarextra.admin.inc',
+   );
+  $items['admin/settings/fivestarextra_users'] = array(
+    'title' => 'Fivestar Users Rating',
+    'page callback'     => 'drupal_get_form',
+    'page arguments'    => array('fivestarextra_users_admin_form'),
+    'description' => 'Configure Fivestar setting for the rating of users.',
+    'type' => MENU_NORMAL_ITEM,
+    'access callback' => 'user_access',
+    'access arguments' => array('administer site configuration'),
+    'file' => 'fivestarextra.admin.inc',
+   );
+  
+  return $items;
+}
+
+
+/**
+ * Implementation of hook_theme().
+ */
+function fivestarextra_theme() {
+  return array(
+    'fivestarextra_noderestrict_enable_comment' => array(
+      'arguments' => array('element' => NULL),
+      'file' => 'fivestarextra.admin.inc',
+    ),
+  );
+}
+
+
+/**
+ * Implementation of hook_comment.
+ * 
+ * Unfortunately hook_comment doesn't give us the ability to add and render new elements in the comment,
+ * so the Fivestar form has to be concatenated with the comment text itself.
+ */
+function fivestarextra_comment(&$comment, $op) {
+  if ($op == 'view' && $comment->preview != 'Preview') {
+    if (variable_get('fivestarextra_enable_comment', FALSE)) {
+      
+      //node type restriction 
+      if (variable_get('fivestarextra_noderestrict_enable_comment', 0)) {
+        $node = node_load($comment->nid);
+        $type = node_get_types('type',$node);
+        if ( !in_array($type->type,variable_get('fivestarextra_noderestrict_nodetypes',array() ))) {
+          //If the node type isn't listed, exit
+          return;
+        }
+      }
+      
+      $position = variable_get('fivestarextra_position_comment', 'below');
+      switch ($position) {
+        case 'above':
+          $comment->comment = drupal_get_form('fivestarextra_form_comment_'.$comment->cid,'comment',$comment->cid).$comment->comment;
+          break;
+        case 'below':
+          $comment->comment .= drupal_get_form('fivestarextra_form_comment_'.$comment->cid,'comment',$comment->cid);
+          break;
+        default:
+          // We'll do nothing.
+          break;
+      }
+    }
+  }
+}
+
+
+/**
+ * Implementation of hook_forms
+ * 
+ * Maps all our form ids onto fivestarextra_widget_form. We
+ * use a lot of different form ids on the same page.
+ */
+function fivestarextra_forms($form_id, $args) {
+  if (strpos($form_id, 'fivestarextra_form_comment_') !== FALSE) {
+    if ($form_id == 'fivestarextra_form_comment_'. $args[1]) {
+      $forms[$form_id] = array('callback' => 'fivestarextra_widget_form');
+      return $forms;
+    }
+  }
+  if (strpos($form_id, 'fivestarextra_form_user_') !== FALSE) {
+    if ($form_id == 'fivestarextra_form_user_'. $args[1]) {
+      $forms[$form_id] = array('callback' => 'fivestarextra_widget_form');
+      return $forms;
+    }
+  }
+}
+
+
+/**
+ * Modified version of fivestar_form for comments and users.
+ */
+function fivestarextra_widget_form(&$form_state, $content_type, $content_id) {
+  
+  global $user;
+
+  $votes = fivestar_get_votes($content_type, $content_id);
+
+  $values = array(
+    'user' => isset($votes['user']['value']) ? $votes['user']['value'] : NULL,
+    'average' => isset($votes['average']['value']) ? $votes['average']['value'] : NULL,
+    'count' => isset($votes['count']['value']) ? $votes['count']['value'] : NULL,
+  );
+
+  $settings = array(
+    'stars' => variable_get('fivestarextra_stars_'.$content_type, 5),
+    'allow_clear' => variable_get('fivestarextra_unvote_'.$content_type, FALSE),
+    'style' => variable_get('fivestarextra_style_'.$content_type, 'average'),
+    'text' => variable_get('fivestarextra_text_'.$content_type, 'dual'),
+    'content_type' => $content_type,
+    'content_id' => $content_id,
+    'tag' => 'vote',
+    'autosubmit' => TRUE,
+    'title' => variable_get('fivestarextra_title_'.$content_type, 1) ? NULL : FALSE,
+    'feedback_enable' => variable_get('fivestarextra_feedback_'.$content_type, 1),
+    'labels_enable' => variable_get('fivestarextra_labels_enable_'.$content_type, 1),
+    'labels' => variable_get('fivestarextra_labels_'.$content_type, array()),
+  );
+  
+  $myform = fivestar_custom_widget($form_state, $values, $settings);
+  
+  return $myform;
+}
+
+
+/**
+ * Implementation of hook_fivestar_access().
+ */
+function fivestarextra_fivestar_access($type, $id, $account) {
+  if ($type == 'comment') {
+    if (variable_get('fivestarextra_enable_comment', 0)) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
+  if ($type == 'user') {
+    if (variable_get('fivestarextra_enable_user', 0)) {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
+  }
+}
+
+
+/**
+ * Implementation of hook_user.
+ */
+function fivestarextra_user($op, &$edit, &$account, $category = NULL) {
+  switch ($op) {
+    case 'view':
+      if (variable_get('fivestarextra_enable_user', FALSE)) {
+        $account->content['fivestarextra'] = array(
+          '#type' => 'user_profile_category',
+          '#title' => t('User Rating'),
+          '#weight' => variable_get('fivestarextra_position_user', '100'),
+        );
+        $account->content['fivestarextra']['widget'] = array(
+          '#type' => 'user_profile_item',
+          '#title' => t('Rate %username:',array('%username' => $account->name)),
+          '#value' => drupal_get_form('fivestarextra_form_user_'.$account->uid,'user',$account->uid),
+        );
+      }
+      break;
+  }
+}
+

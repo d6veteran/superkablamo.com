@@ -1,0 +1,13 @@
+=== README ===
+SuperKablamo.com
+http://superkablamo.com
+Contact: will.merydith@gmail.com, q.shanahan@gmail.com
+
+
+== Description == 
+
+SuperKablamo.com is a film ratings and review website built on Drupal.  The site targets fans of action and adventure movies and provides multiple rating categories relevant to the action/adventure genre.  Movie data is provided by Freebase.com via their API.
+
+== Platform ==
+
+SuperKablamo.com is built on Drupal 6.10.

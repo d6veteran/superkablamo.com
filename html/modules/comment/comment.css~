@@ -1,0 +1,19 @@
+/* $Id: comment.css,v 1.4 2007/07/24 21:33:53 goba Exp $ */
+
+.indented {
+  margin-left: 25px; /* LTR */
+}
+.comment-unpublished {
+  background-color: #fff4f4;
+}
+.preview .comment {
+  background-color: #ffffea;
+}
+
+#reviews-ratings {border:0px solid red;}
+.review_style {font-weight:bold;font-size:15px;}
+
+.divborder {border:1px solid red;}
+.edit-vote-1-wrapper {float:left;}
+.form-select {float:left;border:1px solid red;}
+hr {line-height:1px;height:1px;background:#f2f2f2;color:#f2f2f2;}

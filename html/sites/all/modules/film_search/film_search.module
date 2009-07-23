@@ -1,0 +1,318 @@
+<?php
+	
+
+function film_search_form(){
+	//drupal_add_css("sites/all/modules/film_search/includes/css/freebase-controls.css");
+	drupal_add_js("sites/all/modules/film_search/includes/jquery-latest.js");
+	drupal_add_css("sites/all/modules/film_search/includes/css/jquery.freebase.minitopic.css");
+	drupal_add_js("sites/all/modules/film_search/includes/jquery.freebase.minitopic.js");
+	drupal_add_js("sites/all/modules/film_search/includes/ajax.js");
+	drupal_add_js("sites/all/modules/film_search/includes/blockui.js");
+	drupal_add_js(
+		"$(document).ready(function(){
+		$('#edit-srch-film').click(function(){ showValues(0);
+			return false;});
+		$('#edit-srch-film').attr('disabled',true);
+		});
+		",'inline'
+	);
+	
+
+
+
+$form['film_srch'] = array(
+  '#type' => 'textfield',
+  '#title' => t('Enter Film Name'),
+  '#size' => 20,
+  '#maxlength' => 60, 
+  '#prefix' => '<table><tr><td>',
+  '#suffix' => '</td>',
+   //'#description' => t('(Enter comma separated list of Email-Ids)'), 
+);
+
+
+
+$form['srch-film'] = array(
+  '#type' => 'button',
+  '#value' => 'Search',
+  '#prefix' => '<td style="padding:18px 0px 0px 10px;">',  
+  '#suffix' => '</td></tr></table><br/><br/><div id="miniTopic" ></div>',
+);
+
+if (module_exists('jquery_freebase')) {
+	jq_add('freebase');
+	drupal_add_js("
+		jQuery(
+			function($) {
+				$('#edit-film-srch')
+				.freebaseSuggest(
+					{
+						ac_param:{
+							type:'/film/film'
+						}
+					}
+				)
+				.bind('fb-select', function(e, data) { 
+				
+					showValues(data.id); return false;
+					/*('miniTopic')
+					.show()
+					.freebaseMiniTopic(data.id);*/
+				}
+			);
+
+			}
+		);
+		",'inline'
+	);
+}
+
+return $form;
+}
+
+
+function film_search_menu(){
+	
+	$items['film_search/details'] = array(
+	"page callback" => 'filmography',
+	"type" => MENU_CALLBACK,
+	"access arguments" => array('access content')
+	);
+	return $items;
+
+}
+
+
+
+function filmography(){
+	
+	$data=$_GET['qvalue'];
+	$id = substr($_GET['id'], 1);
+	
+	$dt_array = json_decode($data);
+	
+	$output .='<table class="fbase-mt-box" cellspacing="0" cellpadding="0" border=0><tr><td valign="top">';
+	$output .='<div class="fbase-mt-plist">';
+	if(sizeof($dt_array->initial_release_date) > 0){
+		$output .='<dl><dt class="gray_font">Initial Release Date</dt>';
+		$output .='<dd>'.$dt_array->initial_release_date.'</dd></dl>';
+		
+	}
+	if(sizeof($dt_array->directed_by) > 0){
+		$output .='<dl><dt class="gray_font">Directed By</dt>';
+		for($i=0;$i<sizeof($dt_array->directed_by);$i++){
+			$directed_by = preg_replace("/'/","",$dt_array->directed_by[$i]->name);
+			$output .='<dd>'.$directed_by.'</dd>';
+		}
+	        $output .= '</dl>';
+	} 
+	if(sizeof($dt_array->starring) > 0){
+		$output .='<dl><dt class="gray_font">Starring</dt></dl>';
+		$output .='<table style="margin-left:40px;"><tr class="gray_font"><td>Actor</td><td>Character</td></tr>';
+		for($i=0;$i<sizeof($dt_array->starring);$i++){
+			$actor = preg_replace("/'/","",$dt_array->starring[$i]->actor);
+			$output .='<tr><td>'.$actor.'</td>';
+			if($dt_array->starring[$i]->character != "null"){
+				$character = preg_replace("/'/","",$dt_array->starring[$i]->character);
+				$output .='<td>'.$character.'</td></tr>';
+			}
+		}
+		$output .='</table>';
+
+	}
+	if(sizeof($dt_array->produced_by) > 0){
+		$output .='<dl><dt class="gray_font">Produced By</dt>';
+		for($i=0;$i<sizeof($dt_array->produced_by);$i++){
+			$output .='<dd>'.preg_replace("/'/","",$dt_array->produced_by[$i]->name).'</dd>';
+		}
+		$output .='</dl>';
+	}
+	if(sizeof($dt_array->story_by) > 0){
+		$output .='<dl><dt class="gray_font">Story By</dt>';
+		for($i=0;$i<sizeof($dt_array->story_by);$i++){
+			$output .='<dd>'.preg_replace("/'/","",$dt_array->story_by[$i]->name).'</dd>';
+		}
+		$output .='</dl>';
+	}
+	if(sizeof($dt_array->music) > 0){
+		$output .='<dl><dt class="gray_font">Music By</dt>';
+		for($i=0;$i<sizeof($dt_array->music);$i++){
+			$music = preg_replace("/'/","",$dt_array->music[$i]->name);
+			$output .='<dd>'.$music.'</dd>';
+		}
+		$output .='</dl>';
+	}
+	if(sizeof($dt_array->cinematography) > 0){
+		$output .='<dl><dt class="gray_font">Cinematography</dt>';
+		for($i=0;$i<sizeof($dt_array->cinematography);$i++){
+			$cinematography = preg_replace("/'/","",$dt_array->cinematography[$i]->name);
+			$output .='<dd>'.$cinematography.'</dd>';
+		}
+		$output .='</dl>';
+	}
+	if(sizeof($dt_array->genre) > 0){
+		$output .='<dl><dt class="gray_font">Genre</dt>';
+		for($i=0;$i<sizeof($dt_array->genre);$i++){
+			$genre = preg_replace("/'/","",$dt_array->genre[$i]->name);
+			$output .='<dd>'.$genre.'</dd>';
+		}
+		$output .='</dl>';
+	}
+	if(sizeof($dt_array->country) > 0){
+		$output .='<dl><dt class="gray_font">Country</dt>';
+		for($i=0;$i<sizeof($dt_array->country);$i++){
+			$country = preg_replace("/'/","",$dt_array->country[$i]->name);
+			$output .='<dd>'.$country.'</dd>';
+		}
+		$output .='</dl>';
+	}
+	if(sizeof($dt_array->rating) > 0){
+		$output .='<dl><dt class="gray_font">Rating</dt>';
+		$rating = preg_replace("/'/","",$dt_array->rating);
+		$output .='<dd>'.$rating.'</dd>';
+		
+	}
+	if(sizeof($dt_array->netflix_id) > 0){
+		$output .='<dl><dt class="gray_font">Netflix Id</dt>';
+		$netfix_id = preg_replace("/'/","",$dt_array->netflix_id);
+		$output .='<dd>'.$netfix_id.'</dd>';
+		$output .='</dl>';
+	}
+	$output .='</td></div><td>';
+	$output .='<table align="right"><tr><td valign="top"><div class="fbase-mt-imgframe"><img src="http://www.freebase.com/api/trans/image_thumb/'.$id.'?maxwidth=250&maxheight=8000" border="0" class="fbase-mt-img"/></div></td></tr></table>';
+	$output .='</td></tr></table>';
+
+	
+	$date = split('-',$dt_array->initial_release_date);
+	$year = $date[0];
+	$month = $date[1];
+	$dat = $date[2];
+	$url ="film/";
+	if($year != ""){
+	  $url .=$year.'/';
+	}
+	if($month != ""){
+	  $url .=$month.'/';
+	}
+	if($dat != ""){
+	  $url .=$dat.'/' ;
+	}
+	
+	$body=file_get_contents("sites/all/modules/film_search/templ.php");
+	$body = preg_replace('/changeid/',$_GET['id'],$body); 
+	$body=addslashes($body);
+	$body .=$output;
+	
+	$id = substr($_GET['id'], 1);
+	$name =  $_GET['name']; 
+	$nam = preg_replace('/-/',' ',$name);
+	$time = time();
+
+	$src = db_result(db_query("SELECT src from {url_alias} where dst='".$url.$name."'"));
+	if($src){
+		$node_id = split('/',$src);
+		$nid = $node_id['1']; 
+		db_query("UPDATE {node_revisions} SET body = '".$body."' WHERE nid =".$nid);
+		echo $url.$name; 
+		
+	}else{
+				
+		db_query("insert into {freebase_filmography} values('".$_GET['id']."','#".$_GET['guid']."','/film/film','".$nam."')");
+		db_query("insert into {node} values(0,0,'page','','".$nam."',1,1,".$time.",".$time.",2,0,0,0,0,0)");
+		$nid = db_result(db_query("SELECT LAST_INSERT_ID()"));
+		db_query("insert into {node_revisions} values(".$nid.",0,1,'".$nam."','".$body."','','',".$time.",3)");
+		$vid = db_result(db_query("SELECT LAST_INSERT_ID()"));
+		$time1 = time();
+		db_query("UPDATE {node} SET vid = %d, changed = %d WHERE nid = %d", $vid,$time1,$nid);
+		db_query("insert into {url_alias} values(0,'node/".$nid."','".$url.$name."','')");
+		echo $url.$name; 
+	}
+
+}
+
+function film_review_history_form(){
+	drupal_add_css("sites/all/modules/fivestar/css/fivestar.css");
+	drupal_add_css("/sites/default/files/fivestar/basic/basic.css");
+	global $user;
+	$uid = $user->uid;
+	if($uid){
+		$user_name = $user->name;
+		$time = time();
+		/*$film_name = db_query("select t1.title,t1.nid,t2.dst,t3.cid from node t1 JOIN url_alias t2 ON t2.src=CONCAT('node/',t1.nid) JOIN comments t3 ON t3.nid=t1.nid where t1.uid=".$uid);*/
+		$film_name = db_query("select t1.nid,t2.title,t3.dst from comments t1 JOIN node t2 ON t2.nid=t1.nid JOIN url_alias t3 ON t3.src=CONCAT('node/',t1.nid) where t1.uid=".$uid);
+		
+		
+		echo "<table width='100%'><tr style='text-align:center;font-weight:bold;'><td width='200px'>Films Reviewed by ".$user_name."</td><td width='300px'>Comments</td><td>Ratings</td></tr>";
+		
+		while($film = db_fetch_array($film_name)){
+			echo  "<tr><td><a href='".$film['dst']."'>".$film['title']."</a></td></tr>";
+			$comment = db_query("select comment,cid from comments where nid=".$film['nid']." and uid=".$uid);
+			while($cmnt = db_fetch_array($comment)){
+				$field_name=array();
+				echo "<tr><td/><td style='padding-left:20px;'>".$cmnt['comment']."</td><td>";
+				$que= "SELECT * from {category}";
+				$tbname = db_query($que);
+				$avg_values=array();
+				
+				while($item = db_fetch_array($tbname)){
+					array_push($field_name,$item['category']);
+				}
+				$query="select value from {voting_comment} where cid=".$cmnt['cid'];
+				$value = db_query($query);
+				while($val = db_fetch_array($value)){
+					$vals = $val['value'];
+	                        	array_push($avg_values,$vals);
+				}
+								
+				for($i=0;$i<sizeof($field_name);$i++){
+					if($avg_values[$i] >= '20'){
+						$a='on';
+						$b=$c=$d=$e='off';
+					}
+					if($avg_values[$i] >= '40'){
+						$a=$b='on';
+						$c=$d=$e='off';
+					}
+					if($avg_values[$i] >= '60'){
+						$a=$b=$c='on';
+						$d=$e='off';
+					}	
+					if($avg_values[$i] >= '80'){
+						$b=$c=$a=$d='on';
+						$e='off';
+					}
+					if($avg_values[$i] == '100'){
+						$b=$c=$d=$a=$e='on';
+					}
+		
+				echo '<div id="newdiv" style="border:0px solid red; position:relative;width:250px;left:0px;">
+				      <div class="field field-type-fivestar field-'.$field[$i].'">
+		  	      	      <div class="field-label" style="font-weight:bold;position:relative;right:-50px;bottom:0px;border:0px solid green;">'.$field_name[$i].':&nbsp;</div>
+			 	      <div class="field-items">
+     				      <div class="field-item even">
+	        	              <div class="fivestar-widget-static fivestar-widget-static-5 clear-block" >
+				      <div class="star star-1 star-odd star-first"><span class="'.$a.'">2</span></div>
+				      <div class="star star-2 star-even"><span class="'.$b.'"></span></div>
+				      <div class="star star-3 star-odd"><span class="'.$c.'"></span></div>
+				      <div class="star star-4 star-even"><span class="'.$d.'"></span></div>
+				      <div class="star star-5 star-odd star-last"><span class="'.$e.'"></span></div>
+				      </div></div>
+				      </div></div></div>';
+
+				}
+				$rating = "";
+				
+		
+				echo "</td></tr>";	
+			}
+			
+			
+			
+		}
+		echo"</table>";
+				
+	}else{
+		echo "<strong>Please Login to see your Reviews</strong>";
+	}
+
+}

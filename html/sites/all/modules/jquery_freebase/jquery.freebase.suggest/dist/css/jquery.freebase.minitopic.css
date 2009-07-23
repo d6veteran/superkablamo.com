@@ -1,0 +1,97 @@
+.fbase-mt-link:link, .fbase-mt-link:visited {
+    text-decoration: none;
+    color: #005ecd;
+}
+
+.fbase-mt-link:hover {
+    text-decoration: underline;
+    color: #005ecd;
+}
+
+.fbase-mt-box {
+    border: 1px solid #ccc;
+    color: #222;
+    margin: 10px;
+    font-size: 0.8em;
+    font-family: Arial, sans-serif;
+    height:auto;width:550px;
+}
+
+.fbase-mt-tag {
+    font-size: 10px;
+    color: #999;
+    text-align: right;
+    margin: -10px 0 0 0;
+    line-height: 1em; 
+}
+
+.fbase-mt-imgframe {
+    /*float: left;*/
+    width: 250px;
+    height:auto;
+}
+
+.fbase-mt-img {
+    border: 1px solid #bbb;
+    margin: 4px;
+}
+
+.fbase-mt-body {
+    /*float: left;*/
+    width: 150px;
+}
+
+.fbase-mt-head {
+    font-size: 1.1em;
+    margin: 6px 4px 0 4px;
+}
+
+.fbase-mt-desc {
+    font-size: 0.8em;
+    margin: 4px 4px 6px 4px;
+/*width:800px;*/
+}
+
+.fbase-mt-plist {
+    /*margin: 0 0 0 260px;*/
+    padding: 4px 0 0 0;float:left;
+}
+
+.fbase-mt-prop {
+    margin: 4px 4px 4px 12px;
+    line-height: 0.9em;
+
+}
+
+.fbase-mt-name {
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    padding-right: 0.5em;
+	color:#adadad;
+}
+
+.fbase-mt-value {
+    font-size: 0.9em;
+    color: #414141;
+    Padding-left: 2.5em;
+}
+
+.fbase-mt-nav {
+    border-top: 1px solid #ddd;    
+    clear: left;
+    text-align: center;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    padding: 2px;
+}
+
+.fbase-mt-nav a {
+    padding: 0 2px 0 8px;
+}
+
+
+
+
+

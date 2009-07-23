@@ -1,0 +1,22 @@
+; $Id: blix.info,v 1.1 2008/12/08 01:59:10 thierrygd Exp $
+name = Blix
+description = To be done.
+version = VERSION
+core = 6.x
+engine = phptemplate
+regions[right] = Right sidebar
+regions[left] = Left Sidebar
+regions[header] = Header
+regions[footer] = Footer
+regions[content] = Content
+stylesheets[all][] = style.css
+stylesheets[print][] = print.css
+
+
+
+; Information added by drupal.org packaging script on 2008-12-08
+version = "6.x-2.1"
+core = "6.x"
+project = "blix"
+datestamp = "1228702506"
+

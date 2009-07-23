@@ -1,0 +1,63 @@
+<?php
+
+function profiles_user($type, &$edit, &$user, $category = NULL){
+
+	switch ($type) {
+	case 'validate':
+     		 return profiles_validate_profile($edit, $user, $category, TRUE);
+	case 'load':
+		return profiles_country();
+	}
+}
+
+function profiles_validate_profile($edit, $user, $category){
+
+       
+	/*if($user->profile_fname!==""){
+		preg_match('/^[a-zA-Z]/',$user->profile_fname,$matches);
+		
+		if(!$matches){
+			form_set_error('',t('Please re enter First Name without Special characters.'));
+		}
+	}
+	if($user->profile_mname!==""){
+		preg_match('/^[a-zA-Z]/',$user->profile_mname,$matches);
+		if(!$matches){
+			form_set_error('',t('Please re enter Middle Name without Special characters.'));
+		}
+	}
+	if($user->profile_lname!==""){
+		preg_match('/^[a-zA-Z]+$/',$user->profile_lname,$matches);
+		if(!$matches){
+			form_set_error('',t('Please re enter Last Name without Special characters.'));
+		}
+	}
+	if($user->profile_city!==""){
+		preg_match('/^[a-zA-Z0-9]/',$user->profile_city,$matches);
+		if(!$matches){
+			form_set_error('',t('Please re enter City without Special characters.'));
+		}
+	}
+	if($user->profile_zip!==""){
+		preg_match('/^[0-9]+$/',$user->profile_zip,$matches);
+		if(!$matches){
+			form_set_error('',t('Please re enter Zip Code without Special characters.'));
+		}
+	}
+	if($user->profile_cno!==""){
+		preg_match('/^[0-9]+$/',$user->profile_cno,$matches);
+		if(!$matches){
+			form_set_error('',t('Please re enter Contact Number without Special characters.'));
+		}
+	}	*/
+}
+
+function profiles_country(){
+	/*$res = db_query("SELECT * FROM mplus_last_updated_nodes where type = '%s'",$section);
+	while($row = db_fetch_array($res)){
+		array_push($nids,$row['nid']);
+		array_push($paths,$row['path']);
+	}*/
+
+}
+

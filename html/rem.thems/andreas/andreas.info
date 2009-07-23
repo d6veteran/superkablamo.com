@@ -1,0 +1,14 @@
+name = Andreas
+description = This is a port of Andreas09 v2.2 (Jul 07, 2008) by Andreas Viklund (www.andreasviklund.com).
+version = VERSION
+core = 6.x
+engine = phptemplate
+stylesheets[all][] = style.css
+stylesheets[all][] = andreas.css
+
+; Information added by drupal.org packaging script on 2009-03-16
+version = "6.x-1.0-beta1"
+core = "6.x"
+project = "andreas"
+datestamp = "1237201222"
+

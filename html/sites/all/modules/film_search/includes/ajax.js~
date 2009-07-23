@@ -1,0 +1,52 @@
+function getHttpObj(){
+	var xmlHttp = null;
+	try	{
+		xmlHttp=new XMLHttpRequest();
+	}
+	catch (e){
+		try	{
+			xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+		}
+		catch (ea)	{
+			try	{
+				xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			catch (eaa)	{
+				alert("Your browser does not support AJAX!");
+				return false;
+			}
+		}
+	}
+	return xmlHttp;
+}
+
+
+
+function new_page(id,guid,name)
+{
+	
+	alert(id);
+	alert(guid);
+	alert(name);
+	var objchkavl = getHttpObj();
+	
+	objchkavl.onreadystatechange=function()
+	{
+		if(objchkavl.readyState==4)
+		{	
+			eval=objchkavl.responseText;
+			
+			if(eval){
+				location.href=id.substring(1);
+			}
+		}
+	}
+	
+	var url = 'film_search/ajax?id='+id+'&name='+name+'&guid='+guid.substring(1);
+	
+	
+	objchkavl.open("get",url,true);
+	objchkavl.send(null);	
+	
+	
+}

@@ -1,0 +1,68 @@
+<?php
+	
+function fivestar_average_form(){
+
+		global $user;
+		if($user->uid==""){
+			drupal_add_css("sites/all/modules/fivestar/css/fivestar.css");
+	//<link type="text/css" rel="stylesheet" media="all" href="/filmography/sites/all/modules/fivestar/css/fivestar.css?y" />
+	//<link type="text/css" rel="stylesheet" media="all" href="/filmography/sites/default/files/fivestar/basic/basic.css?y" />
+		}
+
+		$field = array();
+		$field_name = array();
+		$avg_values = array();
+		$node_id = split('/',$_GET['q']);
+		$nid=$node_id['1'];
+		$vid = db_result(db_query("SELECT vid from {node}  where nid='".$nid."'"));
+		$que= "SELECT field_name,label from {content_node_field_instance} where type_name='page'";
+		$tbname = db_query($que);
+		while($item = db_fetch_array($tbname)){
+			array_push($field,preg_replace('/_/','-',$item['field_name']));
+			array_push($field_name,$item['label']);
+			$query="select avg(".$item['field_name']."_rating) as aver from {content_".$item['field_name']."} where ".$item['field_name']."_target=".$nid;
+			$rating_table = db_query($query);
+			$aaaa = db_fetch_array($rating_table);
+			array_push($avg_values,round($aaaa['aver']));
+		}
+		
+		for($i=0;$i<sizeof($field_name);$i++){
+			if($avg_values[$i] >= '20'){
+				$a='on';
+				$b=$c=$d=$e='off';
+			}
+			if($avg_values[$i] >= '40'){
+				$a=$b='on';
+				$c=$d=$e='off';
+			}
+			if($avg_values[$i] >= '60'){
+				$a=$b=$c='on';
+				$d=$e='off';
+			}	
+			if($avg_values[$i] >= '80'){
+				$b=$c=$a=$d='on';
+				$e='off';
+			}
+			if($avg_values[$i] == '100'){
+				$b=$c=$d=$a=$e='on';
+			}
+		
+			echo '<div id="newdiv" style="position:relative;width:450px;left:200px;">
+			      <div class="field field-type-fivestar field-'.$field[$i].'">
+		  	      <div class="field-label">'.$field_name[$i].':&nbsp;</div>
+		 	      <div class="field-items">
+     			      <div class="field-item even">
+	                      <div class="fivestar-widget-static fivestar-widget-static-5 clear-block">
+			      <div class="star star-1 star-odd star-first"><span class="'.$a.'">2</span></div>
+			      <div class="star star-2 star-even"><span class="'.$b.'"></span></div>
+			      <div class="star star-3 star-odd"><span class="'.$c.'"></span></div>
+			      <div class="star star-4 star-even"><span class="'.$d.'"></span></div>
+			      <div class="star star-5 star-odd star-last"><span class="'.$e.'"></span></div>
+			      </div></div>
+			      </div></div></div>';
+
+		}
+
+	
+		
+}

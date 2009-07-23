@@ -1,0 +1,12 @@
+; $Id: fivestar_average.info,v 1.1.2.2 2008/08/27 14:19:49 aaron Exp $
+name = "Film Search"
+description = "Allows modules to register fivestar_average plugins with a central repository."
+package = User interface
+core = 6.x
+
+; Information added by drupal.org packaging script on 2008-10-06
+version = "6.x-1.2"
+core = "6.x"
+project = "fivestar_average"
+datestamp = "1223316027"
+

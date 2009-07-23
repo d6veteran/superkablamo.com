@@ -1,0 +1,40 @@
+function film_search_install(){
+	
+	db_query("CREATE TABLE  {freebase_filmography} (
+  	fid varchar(250) NOT NULL default '0',
+  	guid varchar(250) NOT NULL default '0',
+ 	type varchar(250) NOT NULL default '0',
+  	name varchar(250) NOT NULL default '0',
+	  PRIMARY KEY  (fid)
+	)");
+
+	db_query("CREATE TABLE  {voting_comment} (
+	  vote_id int(11) NOT NULL auto_increment,
+	  cid int(11) NOT NULL,
+	  value tinyint(3) unsigned default NULL,
+	  category_id int(3) default NULL,
+	  PRIMARY KEY  (vote_id),
+	  KEY cid (cid),
+	  KEY category_id (category_id)
+	)");
+	db_query("CREATE TABLE  film.category (
+	  category_id int(3) NOT NULL default '0',
+	  category varchar(30) default NULL,
+	  PRIMARY KEY  (category_id),
+	  UNIQUE KEY category_id (category_id,category)
+	)");
+
+	return true;
+
+}
+
+function film_search_uninstall(){
+	
+	db_query("DROP TABLE  {freebase_filmography}");
+	db_query("DROP TABLE  {voting_comment}");
+	db_query("DROP TABLE  {category}");
+	return true;
+
+}
+
+

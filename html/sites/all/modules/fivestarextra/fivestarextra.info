@@ -1,0 +1,15 @@
+; $Id: fivestarextra.info,v 1.1 2008/10/26 18:53:52 likeless Exp $
+
+name = Fivestar Extra
+description = Use fivestar to rate comments left by users, and to rate the users themselves.
+package = Voting
+core = 6.x
+dependencies[] = fivestar
+dependencies[] = votingapi
+
+; Information added by drupal.org packaging script on 2008-11-06
+version = "6.x-1.0-beta3"
+core = "6.x"
+project = "fivestarextra"
+datestamp = "1225997711"
+
